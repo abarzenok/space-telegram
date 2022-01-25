@@ -51,7 +51,7 @@ def get_images_urls(source):
         nasa_url = images_apis["nasa_apod"]
         params = {
             "api_key": os.getenv("API_KEY_NASA"),
-            "count": 10,  # parametrize via argparse
+            "count": 50,
         }
         response = requests.get(nasa_url, params=params)
         response.raise_for_status()

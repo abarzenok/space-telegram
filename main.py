@@ -92,66 +92,14 @@ def get_file_extension_from_url(url):
     return os.path.splitext(file_name)[-1]
 
 
-def fetch_spacex_last_launch():
-    image_name = "spacex{}{}"
-    images_urls = get_images_urls("spacex")
-    for index, image_url in enumerate(images_urls, start=1):
-        file_extension = get_file_extension_from_url(image_url)
-        if not file_extension:
-            continue
-        download_image(
-            image_url=image_url,
-            image_dir=IMAGES_DIRECTORY,
-            image_name=image_name.format(index, file_extension),
-        )
-
-
-def fetch_nasa_images():
-    image_name = "nasa_apod{}{}"
-    images_urls = get_images_urls("nasa_apod")
-    params = {
-        "api_key": os.getenv("API_KEY_NASA"),
-    }
-    for index, image_url in enumerate(images_urls, start=1):
-        download_image(
-            image_url=image_url,
-            image_dir=IMAGES_DIRECTORY,
-            image_name=image_name.format(
-                index,
-                get_file_extension_from_url(image_url)
-            ),
-            params=params
-        )
-
-
-def fetch_nasa_epic_images():
-    image_dir = "images"
-    image_name = "nasa_epic{}{}"
-    images_urls = get_images_urls("nasa_epic")
-    params = {
-        "api_key": os.getenv("API_KEY_NASA"),
-    }
-    for index, image_url in enumerate(images_urls, start=1):
-        download_image(
-            image_url=image_url,
-            image_dir=image_dir,
-            image_name=image_name.format(
-                index,
-                get_file_extension_from_url(image_url)
-            ),
-            params=params
-        )
-
-
 def main():
     load_dotenv()
     telegram_bot = telegram.Bot(token=os.getenv("API_KEY_TG"))
-    telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS")) or SECONDS_IN_24_HOURS
+    try:
+        telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS"))
+    except TypeError:
+        telegram_send_timeout = SECONDS_IN_24_HOURS
     telegram_send_candidates = []
-
-    fetch_spacex_last_launch()
-    fetch_nasa_images()
-    fetch_nasa_epic_images()
 
     for file in os.listdir(IMAGES_DIRECTORY):
         if os.path.isfile(os.path.join(IMAGES_DIRECTORY, file)):

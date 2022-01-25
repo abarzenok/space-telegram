@@ -139,6 +139,13 @@ def fetch_nasa_epic_images():
 def main():
     load_dotenv()
     fetch_spacex_last_launch()
+    #fetch_nasa_images()
+    #fetch_nasa_epic_images()
+
+    bot = telegram.Bot(token=os.getenv("API_KEY_TG"))
+    print(bot.get_me())
+    bot.send_message(chat_id="@space_img", text="Test text message by bot")
+    bot.send_photo(chat_id="@space_img", photo=open('images\\spacex\\spacex1.jpg', 'rb'))# parametrize chat_id
 
 
 if __name__ == '__main__':

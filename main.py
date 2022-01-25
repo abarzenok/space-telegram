@@ -1,5 +1,6 @@
 import os
-from pathlib import Path
+import time
+import datetime
 from urllib import parse
 import requests
 from dotenv import load_dotenv
@@ -70,11 +71,11 @@ def get_images_urls(source):
         response.raise_for_status()
         photos = response.json()
 
-        for photo in photos: #limit to 10
-            timestamp = photo["image"].split("_")[-1]
-            year = timestamp[0:4]
-            month = timestamp[4:6]
-            day = timestamp[6:8]
+        for photo in photos:
+            photo_date = datetime.datetime.fromisoformat(photo["date"])
+            year = photo_date.year
+            month = photo_date.month
+            day = photo_date.day
             photo_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{photo['image']}.png" #naming
             images_urls.append(photo_url)
 

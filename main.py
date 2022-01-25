@@ -8,6 +8,7 @@ import telegram
 from pathlib import Path
 
 
+SECONDS_IN_24_HOURS = 86400
 
 
 def download_image(image_url, image_dir, image_name, params=None):
@@ -140,14 +141,31 @@ def fetch_nasa_epic_images():
 
 def main():
     load_dotenv()
-    fetch_spacex_last_launch()
-    #fetch_nasa_images()
-    #fetch_nasa_epic_images()
+    telegram_bot = telegram.Bot(token=os.getenv("API_KEY_TG"))
+    telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS")) or SECONDS_IN_24_HOURS
 
-    bot = telegram.Bot(token=os.getenv("API_KEY_TG"))
-    print(bot.get_me())
-    bot.send_message(chat_id="@space_img", text="Test text message by bot")
-    bot.send_photo(chat_id="@space_img", photo=open('images\\spacex\\spacex1.jpg', 'rb'))# parametrize chat_id
+    # fetch_spacex_last_launch() # put to another function and call when random.choice can't yield new image (non repetitively)
+    # fetch_nasa_images()
+    # fetch_nasa_epic_images()
+
+    images_directory = 'images'
+
+    print(os.listdir("images"))
+
+    for object in os.listdir(images_directory):
+        if os.path.isfile(os.path.join(images_directory, object)):
+            print(object)
+
+
+    while True:
+        telegram_bot.send_photo(
+            chat_id=os.getenv('TG_CHAT_ID'),
+            photo=open(
+                os.path.join(images_directory, 'spacex1.jpg'),
+                'rb'
+            )
+        )
+        time.sleep(telegram_send_timeout)
 
 
 if __name__ == '__main__':

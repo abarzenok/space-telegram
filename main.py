@@ -78,9 +78,9 @@ def get_images_urls(source):
         for photo in photos:
             photo_date = datetime.datetime.fromisoformat(photo["date"])
             year = photo_date.year
-            month = '{:02d}'.format(photo_date.month)
-            day = '{:02d}'.format(photo_date.day)
-            photo_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{photo['image']}.png" #naming
+            month = "{:02d}".format(photo_date.month)
+            day = "{:02d}".format(photo_date.day)
+            photo_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{photo['image']}.png"
             images_urls.append(photo_url)
 
     return images_urls
@@ -132,12 +132,15 @@ def main():
         telegram_bot.send_photo(
             chat_id=os.getenv('TG_CHAT_ID'),
             photo=open(
-                os.path.join(IMAGES_DIRECTORY, random.choice(telegram_send_candidates)),
-                'rb'
+                os.path.join(
+                    IMAGES_DIRECTORY,
+                    random.choice(telegram_send_candidates)
+                ),
+                "rb"
             )
         )
         time.sleep(telegram_send_timeout)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

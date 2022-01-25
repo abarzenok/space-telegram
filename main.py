@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 def download_image(image_url, image_dir, image_name, params=None):
+    """Download image to specified directory and return None."""
     if params is None:
         params = {}
     if not image_url:
@@ -29,8 +30,7 @@ def download_image(image_url, image_dir, image_name, params=None):
 
 
 def get_images_urls(source):
-    images_urls = []
-
+    """Get urls of images for specified source and return them as list."""
     images_apis = {
         "spacex": "https://api.spacexdata.com/v4/launches",
         "nasa_apod": "https://api.nasa.gov/planetary/apod",
@@ -82,6 +82,7 @@ def get_images_urls(source):
 
 
 def get_file_extension_from_url(url):
+    """Get extension of a file and return it as str (e.g. '.txt', '.jpeg' etc.)"""
     unquoted_url_path = parse.unquote(parse.urlsplit(url).path)
     file_name = os.path.split(unquoted_url_path)[-1]
     return os.path.splitext(file_name)[-1]

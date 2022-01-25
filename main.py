@@ -3,6 +3,8 @@ from pathlib import Path
 from urllib import parse
 import requests
 from dotenv import load_dotenv
+import telegram
+from pathlib import Path
 
 
 
@@ -136,7 +138,6 @@ def fetch_nasa_epic_images():
 
 def main():
     load_dotenv()
-    print(os.getenv('API_KEY_NASA'))
     fetch_spacex_last_launch()
 
 

@@ -1,6 +1,7 @@
 import os
 import time
 import datetime
+import random
 from urllib import parse
 import requests
 from dotenv import load_dotenv
@@ -9,6 +10,7 @@ from pathlib import Path
 
 
 SECONDS_IN_24_HOURS = 86400
+IMAGES_DIRECTORY = "images"
 
 
 def download_image(image_url, image_dir, image_name, params=None):
@@ -39,15 +41,16 @@ def get_images_urls(source):
         "nasa_epic": "https://api.nasa.gov/EPIC/api/natural"
     }
     images_urls = []
+
     if source == "spacex":
-        launches_url = images_apis["spacex"] # TODO: parametrize as function argument
+        launches_url = images_apis["spacex"]
         response = requests.get(launches_url)
         response.raise_for_status()
         launches = response.json()
 
         for launch in launches:
-            if launch.get("links").get("flickr").get("original"):
-                images_urls = launch["links"]["flickr"]["original"]  # TODO: try to access dict only once, seems with break statement
+            images_urls = launch.get("links").get("flickr").get("original")
+            if images_urls:
                 break
 
     elif source == "nasa_apod":
@@ -106,7 +109,7 @@ def fetch_images(images_source):
             continue
         download_image(
             image_url=image_url,
-            image_dir=image_dir,
+            image_dir=IMAGES_DIRECTORY,
             image_name=image_name.format(index, file_extension), params=params
         )
 
@@ -115,25 +118,21 @@ def main():
     load_dotenv()
     telegram_bot = telegram.Bot(token=os.getenv("API_KEY_TG"))
     telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS")) or SECONDS_IN_24_HOURS
+    telegram_send_candidates = []
 
     fetch_images("spacex")
     fetch_images("nasa_apod")
     fetch_images("nasa_epic")
 
-    images_directory = 'images'
-
-    print(os.listdir("images"))
-
-    for object in os.listdir(images_directory):
-        if os.path.isfile(os.path.join(images_directory, object)):
-            print(object)
-
+    for object in os.listdir(IMAGES_DIRECTORY):
+        if os.path.isfile(os.path.join(IMAGES_DIRECTORY, object)):
+            telegram_send_candidates.append(object)
 
     while True:
         telegram_bot.send_photo(
             chat_id=os.getenv('TG_CHAT_ID'),
             photo=open(
-                os.path.join(images_directory, 'spacex1.jpg'),
+                os.path.join(IMAGES_DIRECTORY, random.choice(telegram_send_candidates)),
                 'rb'
             )
         )

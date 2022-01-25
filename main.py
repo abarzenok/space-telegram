@@ -94,7 +94,7 @@ def get_file_extension_from_url(url):
 
 
 def fetch_images(images_source):
-    image_dir = "images"
+    """Fetch image for specified source and download it"""
     image_name = images_source+"{}{}"
     images_urls = get_images_urls(images_source)
     params = None

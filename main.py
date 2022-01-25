@@ -41,7 +41,6 @@ def get_images_urls(source):
         "nasa_epic": "https://api.nasa.gov/EPIC/api/natural"
     }
     images_urls = []
-
     if source == "spacex":
         launches_url = images_apis["spacex"]
         response = requests.get(launches_url)
@@ -93,16 +92,9 @@ def get_file_extension_from_url(url):
     return os.path.splitext(file_name)[-1]
 
 
-def fetch_images(images_source):
-    """Fetch image for specified source and download it"""
-    image_name = images_source+"{}{}"
-    images_urls = get_images_urls(images_source)
-    params = None
-    if images_source in ("nasa_apod", "nasa_epic"):
-        params = {
-            "api_key": os.getenv("API_KEY_NASA"),
-        }
-
+def fetch_spacex_last_launch():
+    image_name = "spacex{}{}"
+    images_urls = get_images_urls("spacex")
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
         if not file_extension:
@@ -110,7 +102,40 @@ def fetch_images(images_source):
         download_image(
             image_url=image_url,
             image_dir=IMAGES_DIRECTORY,
-            image_name=image_name.format(index, file_extension), params=params
+            image_name=image_name.format(index, file_extension),
+        )
+
+
+def fetch_nasa_images():
+    image_name = "nasa_apod{}{}"
+    images_urls = get_images_urls("nasa_apod")
+    params = {
+        "api_key": os.getenv("API_KEY_NASA"),
+    }
+    for index, image_url in enumerate(images_urls, start=1):
+        download_image(
+            image_url=image_url,
+            image_dir=IMAGES_DIRECTORY,
+            image_name=image_name.format(index, get_file_extension_from_url(image_url)), params=params
+        )
+
+
+def fetch_nasa_epic_images():
+    image_dir = "images"
+    image_name = "nasa_epic{}{}"
+    images_urls = get_images_urls("nasa_epic")
+    params = {
+        "api_key": os.getenv("API_KEY_NASA"),
+    }
+    for index, image_url in enumerate(images_urls, start=1):
+        download_image(
+            image_url=image_url,
+            image_dir=image_dir,
+            image_name=image_name.format(
+                index,
+                get_file_extension_from_url(image_url)
+            ),
+            params=params
         )
 
 
@@ -120,9 +145,9 @@ def main():
     telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS")) or SECONDS_IN_24_HOURS
     telegram_send_candidates = []
 
-    fetch_images("spacex")
-    fetch_images("nasa_apod")
-    fetch_images("nasa_epic")
+    # fetch_spacex_last_launch() # put to another function and call when random.choice can't yield new image (non repetitively)
+    # fetch_nasa_images()
+    # fetch_nasa_epic_images()
 
     for object in os.listdir(IMAGES_DIRECTORY):
         if os.path.isfile(os.path.join(IMAGES_DIRECTORY, object)):

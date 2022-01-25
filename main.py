@@ -3,10 +3,10 @@ import time
 import datetime
 import random
 from urllib import parse
+from pathlib import Path
 import requests
 from dotenv import load_dotenv
 import telegram
-from pathlib import Path
 
 
 SECONDS_IN_24_HOURS = 86400
@@ -116,7 +116,11 @@ def fetch_nasa_images():
         download_image(
             image_url=image_url,
             image_dir=IMAGES_DIRECTORY,
-            image_name=image_name.format(index, get_file_extension_from_url(image_url)), params=params
+            image_name=image_name.format(
+                index,
+                get_file_extension_from_url(image_url)
+            ),
+            params=params
         )
 
 
@@ -145,26 +149,24 @@ def main():
     telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS")) or SECONDS_IN_24_HOURS
     telegram_send_candidates = []
 
-    # fetch_spacex_last_launch() # put to another function and call when random.choice can't yield new image (non repetitively)
-    # fetch_nasa_images()
-    # fetch_nasa_epic_images()
+    fetch_spacex_last_launch()
+    fetch_nasa_images()
+    fetch_nasa_epic_images()
 
-    for object in os.listdir(IMAGES_DIRECTORY):
-        if os.path.isfile(os.path.join(IMAGES_DIRECTORY, object)):
-            telegram_send_candidates.append(object)
+    for file in os.listdir(IMAGES_DIRECTORY):
+        if os.path.isfile(os.path.join(IMAGES_DIRECTORY, file)):
+            telegram_send_candidates.append(file)
 
     while True:
-        telegram_bot.send_photo(
-            chat_id=os.getenv('TG_CHAT_ID'),
-            photo=open(
-                os.path.join(
+        with open(os.path.join(
                     IMAGES_DIRECTORY,
                     random.choice(telegram_send_candidates)
-                ),
-                "rb"
-            )
-        )
-        time.sleep(telegram_send_timeout)
+        ), "rb") as photo:
+            telegram_bot.send_photo(
+                chat_id=os.getenv('TG_CHAT_ID'),
+                photo=photo,
+                )
+            time.sleep(telegram_send_timeout)
 
 
 if __name__ == "__main__":

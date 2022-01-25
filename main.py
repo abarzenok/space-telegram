@@ -38,6 +38,7 @@ def get_images_urls(source):
         "nasa_apod": "https://api.nasa.gov/planetary/apod",
         "nasa_epic": "https://api.nasa.gov/EPIC/api/natural"
     }
+    images_urls = []
     if source == "spacex":
         launches_url = images_apis["spacex"] # TODO: parametrize as function argument
         response = requests.get(launches_url)
@@ -61,7 +62,6 @@ def get_images_urls(source):
 
         for photo in photos:
             images_urls.append(photo.get("url"))
-
 
     elif source == "nasa_epic":
         nasa_epic_url = images_apis["nasa_epic"]
@@ -91,7 +91,7 @@ def get_file_extension_from_url(url):
 
 
 def fetch_spacex_last_launch():
-    image_dir = "images\\spacex"
+    image_dir = "images"
     image_name = "spacex{}{}"
     images_urls = get_images_urls("spacex")
     for index, image_url in enumerate(images_urls, start=1):
@@ -106,7 +106,7 @@ def fetch_spacex_last_launch():
 
 
 def fetch_nasa_images():
-    image_dir = "images\\nasa_apod"
+    image_dir = "images"
     image_name = "nasa_apod{}{}"
     images_urls = get_images_urls("nasa_apod")
     params = {
@@ -121,7 +121,7 @@ def fetch_nasa_images():
 
 
 def fetch_nasa_epic_images():
-    image_dir = "images\\nasa_epic"
+    image_dir = "images"
     image_name = "nasa_epic{}{}"
     images_urls = get_images_urls("nasa_epic")
     params = {

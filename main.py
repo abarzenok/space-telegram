@@ -20,13 +20,11 @@ def main():
             telegram_send_candidates.append(file)
 
     while True:
-        with open(
-                os.path.join(
-                    IMAGES_DIRECTORY,
-                    random.choice(telegram_send_candidates)
-                ),
-                "rb"
-                ) as photo:
+        photo_to_send = os.path.join(
+            IMAGES_DIRECTORY,
+            random.choice(telegram_send_candidates)
+        )
+        with open(photo_to_send, "rb") as photo:
             telegram_bot.send_photo(
                 chat_id=os.getenv('TG_CHAT_ID'),
                 photo=photo,

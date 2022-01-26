@@ -19,13 +19,9 @@ def download_image(image_url, image_dir, image_name, params=None):
         return
     full_path = os.path.join(image_dir, image_name)
     Path(image_dir).mkdir(exist_ok=True)
-    try:
-        response = requests.get(image_url, params=params)
-        response.raise_for_status()
-    except requests.HTTPError:
-        return
-    except requests.ConnectionError:
-        return
+
+    response = requests.get(image_url, params=params)
+    response.raise_for_status()
 
     with open(full_path, "wb") as file:
         file.write(response.content)

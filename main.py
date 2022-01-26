@@ -15,8 +15,6 @@ IMAGES_DIRECTORY = "images"
 
 def download_image(image_url, image_dir, image_name, params=None):
     """Download image to specified directory and return None."""
-    if params is None:
-        params = {}
     if not image_url:
         return
     full_path = os.path.join(image_dir, image_name)
@@ -95,10 +93,7 @@ def get_file_extension_from_url(url):
 def main():
     load_dotenv()
     telegram_bot = telegram.Bot(token=os.getenv("API_KEY_TG"))
-    try:
-        telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS"))
-    except TypeError:
-        telegram_send_timeout = SECONDS_IN_24_HOURS
+    telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS"), SECONDS_IN_24_HOURS)
     telegram_send_candidates = []
 
     for file in os.listdir(IMAGES_DIRECTORY):

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from main import get_images_urls, get_file_extension_from_url, IMAGES_DIRECTORY, download_image
+from main import get_images_urls, get_file_extension_from_url, IMAGES_DIRECTORY, download_image,create_images_directory
 import requests
 
 
@@ -10,6 +10,7 @@ def fetch_nasa_apod_images(api_key):
     params = {
         "api_key": api_key,
     }
+    create_images_directory(IMAGES_DIRECTORY)
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
         if not file_extension:
@@ -37,6 +38,7 @@ def fetch_nasa_epic_images(api_key):
     params = {
         "api_key": api_key,
     }
+    create_images_directory(IMAGES_DIRECTORY)
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
         if not file_extension:

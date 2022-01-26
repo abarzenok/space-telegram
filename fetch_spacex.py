@@ -1,10 +1,12 @@
 import requests
-from main import get_images_urls, get_file_extension_from_url, IMAGES_DIRECTORY, download_image
+from main import get_images_urls, get_file_extension_from_url, IMAGES_DIRECTORY, download_image, create_images_directory
 
 
 def fetch_spacex_last_launch():
     image_name = "spacex{}{}"
     images_urls = get_images_urls("spacex")
+
+    create_images_directory(IMAGES_DIRECTORY)
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
         if not file_extension:

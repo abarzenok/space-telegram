@@ -13,12 +13,15 @@ SECONDS_IN_24_HOURS = 86400
 IMAGES_DIRECTORY = "images"
 
 
+def create_images_directory(directory_path):
+    Path(directory_path).mkdir(exist_ok=True)
+
+
 def download_image(image_url, image_dir, image_name, params=None):
     """Download image to specified directory and return None."""
     if not image_url:
         return
     full_path = os.path.join(image_dir, image_name)
-    Path(image_dir).mkdir(exist_ok=True)
 
     response = requests.get(image_url, params=params)
     response.raise_for_status()

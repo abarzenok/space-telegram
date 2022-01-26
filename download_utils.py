@@ -1,15 +1,17 @@
+"""Module includes helpful functions for photos downloading."""
 import os
+from pathlib import Path
 from urllib import parse
 import requests
-from pathlib import Path
 
 
 def create_images_directory(directory_path):
+    """Create directory to store images."""
     Path(directory_path).mkdir(exist_ok=True)
 
 
 def get_file_extension_from_url(url):
-    """Get extension of a file and return it as str (e.g. '.txt', '.jpeg' etc.)"""
+    """Get extension of a file and return it as str (e.g. '.jpg')"""
     unquoted_url_path = parse.unquote(parse.urlsplit(url).path)
     file_name = os.path.split(unquoted_url_path)[-1]
     return os.path.splitext(file_name)[-1]
@@ -28,7 +30,9 @@ def download_image(image_url, image_dir, image_name, params=None):
         file.write(response.content)
 
 
-def download_images_from_list(images_urls, images_directory, image_name, request_params=None):
+def download_images_from_list(images_urls, images_directory, image_name,
+                              request_params=None):
+    """Go through the list and try to download every photo in it"""
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
         if not file_extension:

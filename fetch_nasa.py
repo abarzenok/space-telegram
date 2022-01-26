@@ -1,3 +1,6 @@
+"""
+This module downloads NASA images
+"""
 import os
 import datetime
 from dotenv import load_dotenv
@@ -7,6 +10,7 @@ from main import IMAGES_DIRECTORY
 
 
 def fetch_nasa_apod_images(api_key):
+    """Get and download random list of NASA APOD pictures"""
     images_api = "https://api.nasa.gov/planetary/apod"
     image_name = "nasa_apod{}{}"
     images_urls = []
@@ -32,6 +36,7 @@ def fetch_nasa_apod_images(api_key):
 
 
 def fetch_nasa_epic_images(api_key):
+    """Get and download list of NASA EPIC images"""
     images_api = "https://api.nasa.gov/EPIC/api/natural"
     image_name = "nasa_epic{}{}"
     images_urls = []
@@ -43,11 +48,12 @@ def fetch_nasa_epic_images(api_key):
     photos = response.json()
 
     for photo in photos:
+        download_url = "https://api.nasa.gov/EPIC/archive/natural"
         photo_date = datetime.datetime.fromisoformat(photo["date"])
         year = photo_date.year
         month = "{:02d}".format(photo_date.month)
         day = "{:02d}".format(photo_date.day)
-        photo_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{photo['image']}.png"
+        photo_url = f"{download_url}/{year}/{month}/{day}/png/{photo['image']}.png"
         images_urls.append(photo_url)
 
     create_images_directory(IMAGES_DIRECTORY)

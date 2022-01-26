@@ -1,34 +1,28 @@
 import requests
-from main import get_file_extension_from_url, IMAGES_DIRECTORY, download_image, create_images_directory
+from download_utils import create_images_directory, download_images_from_list
+from main import IMAGES_DIRECTORY
 
 
 def fetch_spacex_last_launch():
     images_api = "https://api.spacexdata.com/v4/launches"
-    images_urls = []
     image_name = "spacex{}{}"
+    images_urls = []
     response = requests.get(images_api)
     response.raise_for_status()
     launches = response.json()
+
     for launch in launches:
         images_urls = launch.get("links").get("flickr").get("original")
         if images_urls:
             break
-    create_images_directory(IMAGES_DIRECTORY)
 
-    for index, image_url in enumerate(images_urls, start=1): # function candidate
-        file_extension = get_file_extension_from_url(image_url)
-        if not file_extension:
-            continue
-        try:
-            download_image(
-                image_url=image_url,
-                image_dir=IMAGES_DIRECTORY,
-                image_name=image_name.format(index, file_extension),
-            )
-        except requests.HTTPError:
-            continue
-        except requests.ConnectionError:
-            continue
+    create_images_directory(IMAGES_DIRECTORY)
+    download_images_from_list(
+        images_urls,
+        IMAGES_DIRECTORY,
+        image_name,
+        request_params=None
+    )
 
 
 if __name__ == '__main__':

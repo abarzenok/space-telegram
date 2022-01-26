@@ -1,13 +1,21 @@
 import requests
-from main import get_images_urls, get_file_extension_from_url, IMAGES_DIRECTORY, download_image, create_images_directory
+from main import get_file_extension_from_url, IMAGES_DIRECTORY, download_image, create_images_directory
 
 
 def fetch_spacex_last_launch():
+    images_api = "https://api.spacexdata.com/v4/launches"
+    images_urls = []
     image_name = "spacex{}{}"
-    images_urls = get_images_urls("spacex")
-
+    response = requests.get(images_api)
+    response.raise_for_status()
+    launches = response.json()
+    for launch in launches:
+        images_urls = launch.get("links").get("flickr").get("original")
+        if images_urls:
+            break
     create_images_directory(IMAGES_DIRECTORY)
-    for index, image_url in enumerate(images_urls, start=1):
+
+    for index, image_url in enumerate(images_urls, start=1): # function candidate
         file_extension = get_file_extension_from_url(image_url)
         if not file_extension:
             continue

@@ -30,58 +30,6 @@ def download_image(image_url, image_dir, image_name, params=None):
         file.write(response.content)
 
 
-def get_images_urls(source):
-    """Get urls of images for specified source and return them as list."""
-    images_apis = {
-        "spacex": "https://api.spacexdata.com/v4/launches",
-        "nasa_apod": "https://api.nasa.gov/planetary/apod",
-        "nasa_epic": "https://api.nasa.gov/EPIC/api/natural",
-    }
-    images_urls = []
-    if source == "spacex":
-        launches_url = images_apis["spacex"]
-        response = requests.get(launches_url)
-        response.raise_for_status()
-        launches = response.json()
-
-        for launch in launches:
-            images_urls = launch.get("links").get("flickr").get("original")
-            if images_urls:
-                break
-
-    elif source == "nasa_apod":
-        nasa_url = images_apis["nasa_apod"]
-        params = {
-            "api_key": os.getenv("API_KEY_NASA"),
-            "count": 50,
-        }
-        response = requests.get(nasa_url, params=params)
-        response.raise_for_status()
-        photos = response.json()
-
-        for photo in photos:
-            images_urls.append(photo.get("url"))
-
-    elif source == "nasa_epic":
-        nasa_epic_url = images_apis["nasa_epic"]
-        params = {
-            "api_key": os.getenv("API_KEY_NASA"),
-        }
-        response = requests.get(nasa_epic_url, params=params)
-        response.raise_for_status()
-        photos = response.json()
-
-        for photo in photos:
-            photo_date = datetime.datetime.fromisoformat(photo["date"])
-            year = photo_date.year
-            month = "{:02d}".format(photo_date.month)
-            day = "{:02d}".format(photo_date.day)
-            photo_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{photo['image']}.png"
-            images_urls.append(photo_url)
-
-    return images_urls
-
-
 def get_file_extension_from_url(url):
     """Get extension of a file and return it as str (e.g. '.txt', '.jpeg' etc.)"""
     unquoted_url_path = parse.unquote(parse.urlsplit(url).path)

@@ -3,11 +3,12 @@ from dotenv import load_dotenv
 from main import get_images_urls, get_file_extension_from_url, IMAGES_DIRECTORY, download_image
 import requests
 
-def fetch_nasa_apod_images():
+
+def fetch_nasa_apod_images(api_key):
     image_name = "nasa_apod{}{}"
     images_urls = get_images_urls("nasa_apod")
     params = {
-        "api_key": os.getenv("API_KEY_NASA"),
+        "api_key": api_key,
     }
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
@@ -29,12 +30,12 @@ def fetch_nasa_apod_images():
             continue
 
 
-def fetch_nasa_epic_images():
+def fetch_nasa_epic_images(api_key):
     image_dir = "images"
     image_name = "nasa_epic{}{}"
     images_urls = get_images_urls("nasa_epic")
     params = {
-        "api_key": os.getenv("API_KEY_NASA"),
+        "api_key": api_key,
     }
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)
@@ -58,5 +59,6 @@ def fetch_nasa_epic_images():
 
 if __name__ == '__main__':
     load_dotenv()
-    fetch_nasa_apod_images()
-    fetch_nasa_epic_images()
+    API_KEY_NASA = os.getenv("API_KEY_NASA")
+    fetch_nasa_apod_images(API_KEY_NASA)
+    fetch_nasa_epic_images(API_KEY_NASA)

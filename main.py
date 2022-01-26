@@ -21,11 +21,11 @@ def download_image(image_url, image_dir, image_name, params=None):
     Path(image_dir).mkdir(exist_ok=True)
     try:
         response = requests.get(image_url, params=params)
+        response.raise_for_status()
     except requests.HTTPError:
         return
     except requests.ConnectionError:
         return
-    response.raise_for_status()
 
     with open(full_path, "wb") as file:
         file.write(response.content)
@@ -36,7 +36,7 @@ def get_images_urls(source):
     images_apis = {
         "spacex": "https://api.spacexdata.com/v4/launches",
         "nasa_apod": "https://api.nasa.gov/planetary/apod",
-        "nasa_epic": "https://api.nasa.gov/EPIC/api/natural"
+        "nasa_epic": "https://api.nasa.gov/EPIC/api/natural",
     }
     images_urls = []
     if source == "spacex":

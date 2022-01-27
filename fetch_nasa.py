@@ -66,8 +66,13 @@ def fetch_nasa_epic_images(api_key):
     )
 
 
-if __name__ == '__main__':
+def main():
+    """Run images download from NASA's APIs"""
     load_dotenv()
-    API_KEY_NASA = os.getenv("API_KEY_NASA")
-    fetch_nasa_apod_images(API_KEY_NASA)
-    fetch_nasa_epic_images(API_KEY_NASA)
+    nasa_api_key = os.getenv("API_KEY_NASA")
+    fetch_nasa_apod_images(nasa_api_key)
+    fetch_nasa_epic_images(nasa_api_key)
+
+
+if __name__ == "__main__":
+    main()

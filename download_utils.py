@@ -1,13 +1,7 @@
 """Module includes helpful functions for photos downloading."""
 import os
-from pathlib import Path
 from urllib import parse
 import requests
-
-
-def create_images_directory(directory_path):
-    """Create directory to store images."""
-    Path(directory_path).mkdir(exist_ok=True)
 
 
 def get_file_extension_from_url(url):

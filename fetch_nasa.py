@@ -2,10 +2,11 @@
 This module downloads NASA images
 """
 import os
+from pathlib import Path
 import datetime
 from dotenv import load_dotenv
 import requests
-from download_utils import create_images_directory, download_images_from_list
+from download_utils import download_images_from_list
 from main import IMAGES_DIRECTORY
 
 
@@ -25,7 +26,7 @@ def fetch_nasa_apod_images(api_key):
     for photo in photos:
         images_urls.append(photo.get("url"))
 
-    create_images_directory(IMAGES_DIRECTORY)
+    Path(IMAGES_DIRECTORY).mkdir(exist_ok=True)
     params = {"api_key": api_key}
     download_images_from_list(
         images_urls,
@@ -56,7 +57,7 @@ def fetch_nasa_epic_images(api_key):
         photo_url = f"{download_url}/{year}/{month}/{day}/png/{photo['image']}.png"
         images_urls.append(photo_url)
 
-    create_images_directory(IMAGES_DIRECTORY)
+    Path(IMAGES_DIRECTORY).mkdir(exist_ok=True)
     download_images_from_list(
         images_urls,
         IMAGES_DIRECTORY,

@@ -1,8 +1,9 @@
 """
 This module downloads SpaceX images
 """
+from pathlib import Path
 import requests
-from download_utils import create_images_directory, download_images_from_list
+from download_utils import download_images_from_list
 from main import IMAGES_DIRECTORY
 
 
@@ -20,7 +21,7 @@ def fetch_spacex_last_launch():
         if images_urls:
             break
 
-    create_images_directory(IMAGES_DIRECTORY)
+    Path(IMAGES_DIRECTORY).mkdir(exist_ok=True)
     download_images_from_list(
         images_urls,
         IMAGES_DIRECTORY,

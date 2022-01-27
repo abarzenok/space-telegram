@@ -24,8 +24,8 @@ def download_image(image_url, image_dir, image_name, params=None):
         file.write(response.content)
 
 
-def download_images_from_list(images_urls, images_directory, image_name,
-                              request_params=None):
+def download_images(images_urls, images_directory, image_name,
+                    request_params=None):
     """Go through the list and try to download every photo in it"""
     for index, image_url in enumerate(images_urls, start=1):
         file_extension = get_file_extension_from_url(image_url)

@@ -6,7 +6,7 @@ from pathlib import Path
 import datetime
 from dotenv import load_dotenv
 import requests
-from download_utils import download_images_from_list
+from download_utils import download_images
 from main import IMAGES_DIRECTORY
 
 
@@ -28,7 +28,7 @@ def fetch_nasa_apod_images(api_key):
 
     Path(IMAGES_DIRECTORY).mkdir(exist_ok=True)
     params = {"api_key": api_key}
-    download_images_from_list(
+    download_images(
         images_urls,
         IMAGES_DIRECTORY,
         image_name,
@@ -58,7 +58,7 @@ def fetch_nasa_epic_images(api_key):
         images_urls.append(photo_url)
 
     Path(IMAGES_DIRECTORY).mkdir(exist_ok=True)
-    download_images_from_list(
+    download_images(
         images_urls,
         IMAGES_DIRECTORY,
         image_name,

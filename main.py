@@ -33,7 +33,7 @@ def main():
                 chat_id=os.getenv('TG_CHAT_ID'),
                 photo=photo,
             )
-            time.sleep(telegram_send_timeout)
+        time.sleep(telegram_send_timeout)
 
 
 if __name__ == "__main__":

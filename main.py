@@ -19,9 +19,9 @@ def main():
     telegram_send_timeout = int(os.getenv("POST_DELAY_SECONDS", SEC_IN_24_HRS))
     telegram_send_candidates = []
 
-    for file in os.listdir(IMAGES_DIRECTORY):
-        if os.path.isfile(os.path.join(IMAGES_DIRECTORY, file)):
-            telegram_send_candidates.append(file)
+    for filename in os.listdir(IMAGES_DIRECTORY):
+        if os.path.isfile(os.path.join(IMAGES_DIRECTORY, filename)):
+            telegram_send_candidates.append(filename)
 
     while True:
         photo_to_send = os.path.join(

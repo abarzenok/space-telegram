@@ -1,8 +1,6 @@
 """Module includes helpful functions for photos downloading."""
 import os
-import sys
 from urllib import parse
-import logging
 import requests
 
 
@@ -15,14 +13,6 @@ def get_file_extension_from_url(url):
 
 def download_image(image_url, image_dir, image_name, params=None):
     """Download image to specified directory and return None."""
-    if not image_url:
-        logging.basicConfig(
-            filename="error.log",
-            filemode="w",
-            format="%(asctime)s %(levelname)s %(filename)s %(funcName)s %(message)s")
-        logging.error("Passed invalid image URL.")
-        print("Invalid image URL was passed. Check error.log")
-        sys.exit()
     full_path = os.path.join(image_dir, image_name)
 
     response = requests.get(image_url, params=params)
